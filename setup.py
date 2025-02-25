@@ -162,7 +162,11 @@ sparse_indices_flag = "-DTICK_SPARSE_INDICES_INT32"
 try:
     from scipy.sparse import sputils
 
-    sparsearray_type = sputils.get_index_dtype()
+    # Use get_index_dtype if available; otherwise default to np.int32
+    if hasattr(sputils, 'get_index_dtype'):
+        sparsearray_type = sputils.get_index_dtype()
+    else:
+        sparsearray_type = np.int32
 
     if sparsearray_type == np.int64:
         sparse_indices_flag = "-DTICK_SPARSE_INDICES_INT64"
